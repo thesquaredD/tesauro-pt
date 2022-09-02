@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model palavra {
+  a_palavra                                       String      @id
+  palavra_mae                                     String?
+  palavra                                         palavra?    @relation("palavraTopalavra", fields: [palavra_mae], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "fk_palavra_mae")
+  other_palavra                                   palavra[]   @relation("palavraTopalavra")
+  sinonimos_palavraTosinonimos_palavra_sinonimada sinonimos[] @relation("palavraTosinonimos_palavra_sinonimada")
+  sinonimos_palavraTosinonimos_sinonimo2          sinonimos[] @relation("palavraTosinonimos_sinonimo2")
+  sinonimos_palavraTosinonimos_sinonimo4          sinonimos[] @relation("palavraTosinonimos_sinonimo4")
+  sinonimos_palavraTosinonimos_sinonimo3          sinonimos[] @relation("palavraTosinonimos_sinonimo3")
+  sinonimos_palavraTosinonimos_sinonimo1          sinonimos[] @relation("palavraTosinonimos_sinonimo1")
+}
+
+model sinonimos {
+  id                                            Int      @default(autoincrement())
+  palavra_sinonimada                            String
+  sinonimo1                                     String?
+  sinonimo2                                     String?
+  sinonimo3                                     String?
+  sinonimo4                                     String?
+  palavra_palavraTosinonimos_palavra_sinonimada palavra  @relation("palavraTosinonimos_palavra_sinonimada", fields: [palavra_sinonimada], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "fk_palavra_base")
+  palavra_palavraTosinonimos_sinonimo2          palavra? @relation("palavraTosinonimos_sinonimo2", fields: [sinonimo2], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimodois")
+  palavra_palavraTosinonimos_sinonimo4          palavra? @relation("palavraTosinonimos_sinonimo4", fields: [sinonimo4], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimoquatro")
+  palavra_palavraTosinonimos_sinonimo3          palavra? @relation("palavraTosinonimos_sinonimo3", fields: [sinonimo3], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimotres")
+  palavra_palavraTosinonimos_sinonimo1          palavra? @relation("palavraTosinonimos_sinonimo1", fields: [sinonimo1], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimoum")
+
+  @@id([id, palavra_sinonimada])
+}
