@@ -8,26 +8,26 @@ datasource db {
 }
 
 model sinonimos {
-  id                                              Int       @default(autoincrement())
-  palavra_sinonimada                              String
-  sinonimo1                                       String?
-  sinonimo2                                       String?
-  sinonimo3                                       String?
-  sinonimo4                                       String?
-  palavras_palavrasTosinonimos_palavra_sinonimada palavras  @relation("palavrasTosinonimos_palavra_sinonimada", fields: [palavra_sinonimada], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "fk_palavra_base")
-  palavras_palavrasTosinonimos_sinonimo2          palavras? @relation("palavrasTosinonimos_sinonimo2", fields: [sinonimo2], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimodois")
-  palavras_palavrasTosinonimos_sinonimo4          palavras? @relation("palavrasTosinonimos_sinonimo4", fields: [sinonimo4], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimoquatro")
-  palavras_palavrasTosinonimos_sinonimo3          palavras? @relation("palavrasTosinonimos_sinonimo3", fields: [sinonimo3], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimotres")
-  palavras_palavrasTosinonimos_sinonimo1          palavras? @relation("palavrasTosinonimos_sinonimo1", fields: [sinonimo1], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction, map: "sinonimoum")
+  id                                     BigInt    @unique @default(autoincrement())
+  palavra_sinonimada                     String
+  sinonimo1                              String
+  sinonimo2                              String?
+  sinonimo3                              String?
+  sinonimo4                              String?
+  palavras                               palavras  @relation(fields: [palavra_sinonimada], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
+  palavras_palavrasTosinonimos_sinonimo1 palavras  @relation("palavrasTosinonimos_sinonimo1", fields: [sinonimo1], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
+  palavras_palavrasTosinonimos_sinonimo2 palavras? @relation("palavrasTosinonimos_sinonimo2", fields: [sinonimo2], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
+  palavras_palavrasTosinonimos_sinonimo3 palavras? @relation("palavrasTosinonimos_sinonimo3", fields: [sinonimo3], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
+  palavras_palavrasTosinonimos_sinonimo4 palavras? @relation("palavrasTosinonimos_sinonimo4", fields: [sinonimo4], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([id, palavra_sinonimada])
 }
 
 model palavras {
-  a_palavra                                        String      @id
-  sinonimos_palavrasTosinonimos_palavra_sinonimada sinonimos[] @relation("palavrasTosinonimos_palavra_sinonimada")
-  sinonimos_palavrasTosinonimos_sinonimo2          sinonimos[] @relation("palavrasTosinonimos_sinonimo2")
-  sinonimos_palavrasTosinonimos_sinonimo4          sinonimos[] @relation("palavrasTosinonimos_sinonimo4")
-  sinonimos_palavrasTosinonimos_sinonimo3          sinonimos[] @relation("palavrasTosinonimos_sinonimo3")
-  sinonimos_palavrasTosinonimos_sinonimo1          sinonimos[] @relation("palavrasTosinonimos_sinonimo1")
+  a_palavra                               String      @id
+  sinonimos                               sinonimos[]
+  sinonimos_palavrasTosinonimos_sinonimo1 sinonimos[] @relation("palavrasTosinonimos_sinonimo1")
+  sinonimos_palavrasTosinonimos_sinonimo2 sinonimos[] @relation("palavrasTosinonimos_sinonimo2")
+  sinonimos_palavrasTosinonimos_sinonimo3 sinonimos[] @relation("palavrasTosinonimos_sinonimo3")
+  sinonimos_palavrasTosinonimos_sinonimo4 sinonimos[] @relation("palavrasTosinonimos_sinonimo4")
 }
