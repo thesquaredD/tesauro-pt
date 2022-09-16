@@ -4,6 +4,7 @@ import {
   createTheme,
   CssBaseline,
   PaletteMode,
+  responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material";
 import React from "react";
@@ -29,8 +30,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     []
   );
 
-  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
-  const router = useRouter();
+  let theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  theme = responsiveFontSizes(theme);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
