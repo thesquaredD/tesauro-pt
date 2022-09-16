@@ -14,6 +14,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <title>Tesauro.pt</title>
           <meta
             name="description"
             content="Dicionário de sinónimos do português de Portugal."

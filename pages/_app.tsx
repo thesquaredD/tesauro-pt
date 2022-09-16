@@ -1,5 +1,3 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
 import {
   createTheme,
   CssBaseline,
@@ -7,10 +5,10 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material";
+import type { AppProps } from "next/app";
 import React from "react";
+import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
-import { Header } from "../components/Header";
-import { useRouter } from "next/router";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
