@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
     const {palavra} = req.query
-    const palavras = await prisma.palavra.findMany(
+    const palavras = await prisma.palavras.findMany(
         {
             take : 10,
             where : {a_palavra : {

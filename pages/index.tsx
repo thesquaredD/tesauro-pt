@@ -19,23 +19,26 @@ import { SyntheticEvent, useState } from "react";
 import { SearchBar } from "../components/SearchBar";
 import prisma from "../lib/prisma";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const palavras = await prisma.palavra.findMany({
-    where: { palavra_mae: null },
-  });
-  return {
-    props: { palavras },
-    revalidate: 10,
-  };
-};
-
-const Home: NextPage = ({
-  palavras,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const router = useRouter();
+const Home: NextPage = () => {
   const [value, setValue] = useState("");
+  const [search, setSearch] = useState("");
+  const [options, setOptions] = useState<string[]>();
+  const router = useRouter();
 
-  let options = palavras.map((x: any) => x.a_palavra);
+  const submitData = async (value: string) => {
+    setSearch(value);
+    try {
+      await fetch(`/api/autocomplete/${value}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const sugestoes = data.map((x: any) => x.a_palavra);
+          setOptions(sugestoes);
+          console.log(sugestoes);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const defaultFilterOptions = createFilterOptions<string>();
   const filterOptions = (options: string[], state: FilterOptionsState<any>) =>
@@ -67,13 +70,10 @@ const Home: NextPage = ({
           Tesauro.pt
         </Typography>
         <SearchBar
-          value={value}
-          handleClick={() => router.push("/sinonimo/" + value)}
-          handleValue={(value: string) => {
-            console.log(value);
-            setValue(value);
-          }}
-          options={options}
+          value={search}
+          handleClick={() => router.push("/sinonimo/" + search)}
+          handleValue={submitData}
+          options={options || []}
         />
       </Stack>
     </Box>

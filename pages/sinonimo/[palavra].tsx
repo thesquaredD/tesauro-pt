@@ -25,7 +25,7 @@ function Palavra({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [value, setValue] = useState(0);
   const [search, setSearch] = useState("");
-  const [options, setOptions] = useState<string[]>(["a"]);
+  const [options, setOptions] = useState<string[]>();
   const router = useRouter();
 
   const submitData = async (value: string) => {
@@ -48,7 +48,7 @@ function Palavra({
   };
   return (
     <>
-      <Header value={search} handleValue={submitData} options={options} />
+      <Header value={search} handleValue={submitData} options={options || []} />
       <Box
         display={"flex"}
         flexDirection="column"
