@@ -1,4 +1,5 @@
 import { Box, Button, Chip, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { sinonimos } from "@prisma/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,13 +8,28 @@ import { Header } from "../../components/Header";
 
 import prisma from "../../lib/prisma";
 
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
+function toObject(el: any) {
+  return JSON.parse(
+    JSON.stringify(
+      el,
+      (key, value) =>
+        typeof value === "bigint" ? console.log("kill me") : value // return everything else unchanged
+    )
+  );
+}
+
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const sinonimo_list = await prisma.sinonimos.findMany({
+  const response: sinonimos[] = await prisma.sinonimos.findMany({
     where: {
       palavra_sinonimada: String(params?.palavra),
     },
   });
   const palavra = params?.palavra;
+  const sinonimo_list = toObject(response);
   return {
     props: { sinonimo_list, palavra },
   };
@@ -64,6 +80,7 @@ function Palavra({
           <Stack mb={2} direction={"row"} gap={2}>
             <Typography variant="h2" color={"textPrimary"}>
               {palavra}
+              {sinonimo_list.map((el: any) => JSON.stringify(el))}
             </Typography>
             <Link
               href={`https://dicionario.priberam.org/${palavra}`}
