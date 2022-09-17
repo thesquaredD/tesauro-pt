@@ -80,7 +80,6 @@ function Palavra({
           <Stack mb={2} direction={"row"} gap={2}>
             <Typography variant="h2" color={"textPrimary"}>
               {palavra}
-              {sinonimo_list.map((el: any) => JSON.stringify(el))}
             </Typography>
             <Link
               href={`https://dicionario.priberam.org/${palavra}`}
