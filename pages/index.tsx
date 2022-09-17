@@ -1,48 +1,18 @@
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import {
-  Autocomplete,
   Box,
-  Button,
-  createFilterOptions,
-  FilterOptionsState,
-  InputAdornment,
-  Popper,
-  PopperProps,
   Stack,
-  TextField,
-  TextFieldProps,
+  Theme,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import { useRouter } from "next/router";
-import { SyntheticEvent, useState } from "react";
+import type { NextPage } from "next";
+import Image from "next/image";
 import { SearchBar } from "../components/SearchBar";
-import prisma from "../lib/prisma";
 
 const Home: NextPage = () => {
-  const [value, setValue] = useState("");
-  const [search, setSearch] = useState("");
-  const [options, setOptions] = useState<string[]>();
-  const router = useRouter();
-
-  const submitData = async (value: string) => {
-    setSearch(value);
-    try {
-      await fetch(`/api/autocomplete/${value}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const sugestoes = data.map((x: any) => x.a_palavra);
-          setOptions(sugestoes);
-          console.log(sugestoes);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const defaultFilterOptions = createFilterOptions<string>();
-  const filterOptions = (options: string[], state: FilterOptionsState<any>) =>
-    defaultFilterOptions(options, state).slice(0, 7);
+  const theme = useTheme();
+  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   return (
     <Box
@@ -62,13 +32,31 @@ const Home: NextPage = () => {
         alignItems={"center"}
         gap={2}
       >
-        <Typography
-          textTransform={"uppercase"}
-          variant="h1"
-          color="textPrimary"
+        <Stack
+          justifyContent={"center"}
+          alignItems="center"
+          direction={isSmall ? "column" : "row"}
+          gap={2}
         >
-          Tesauro.pt
-        </Typography>
+          <Image
+            width="100%"
+            height="100%"
+            objectFit="contain"
+            src={
+              theme.palette.mode === "dark"
+                ? "/logoLightDiff.svg"
+                : "/logoDark.svg"
+            }
+            alt="logo"
+          />
+          <Typography
+            textTransform={"uppercase"}
+            variant="h1"
+            color="textPrimary"
+          >
+            Tesauro.pt
+          </Typography>
+        </Stack>
         <SearchBar />
       </Stack>
     </Box>
