@@ -69,12 +69,7 @@ const Home: NextPage = () => {
         >
           Tesauro.pt
         </Typography>
-        <SearchBar
-          value={search}
-          handleClick={() => router.push("/sinonimo/" + search)}
-          handleValue={submitData}
-          options={options || []}
-        />
+        <SearchBar />
       </Stack>
     </Box>
   );

@@ -40,31 +40,13 @@ function Palavra({
   palavra,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [value, setValue] = useState(0);
-  const [search, setSearch] = useState("");
-  const [options, setOptions] = useState<string[]>();
   const router = useRouter();
-
-  const submitData = async (value: string) => {
-    setSearch(value);
-    try {
-      await fetch(`/api/autocomplete/${value}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const sugestoes = data.map((x: any) => x.a_palavra);
-          setOptions(sugestoes);
-          console.log(sugestoes);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
     <>
-      <Header value={search} handleValue={submitData} options={options || []} />
       <Box
         display={"flex"}
         flexDirection="column"

@@ -6,7 +6,9 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import React from "react";
+import { Header } from "../components/Header";
 import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
 
@@ -30,11 +32,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   let theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   theme = responsiveFontSizes(theme);
+  let router = useRouter();
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        {router.pathname === "/" ? <></> : <Header />}
         <Component {...pageProps} />
       </ThemeProvider>
     </ColorModeContext.Provider>

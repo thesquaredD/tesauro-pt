@@ -6,15 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { ColorModeContext } from "../pages/_app";
 import { SearchBar } from "./SearchBar";
 
-export const Header = ({
-  options,
-  value,
-  handleValue,
-}: {
-  options: string[];
-  value: string;
-  handleValue: (value: string) => void;
-}) => {
+export const Header = () => {
   const router = useRouter();
   const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
@@ -45,12 +37,7 @@ export const Header = ({
           </Button>
         </Grid>
         <Grid item xs={8}>
-          <SearchBar
-            value={value}
-            handleValue={handleValue}
-            options={options}
-            handleClick={() => router.push(`/sinonimo/${value}`)}
-          />
+          <SearchBar />
         </Grid>
         <Grid display={"flex"} justifyContent={"flex-end"} item xs>
           <IconButton
