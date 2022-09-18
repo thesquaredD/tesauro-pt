@@ -8,8 +8,10 @@ import {
   Stack,
   TextField,
   TextFieldProps,
+  Theme,
+  useMediaQuery,
 } from "@mui/material";
-import { SyntheticEvent, useState } from "react";
+import { FormEvent, SyntheticEvent, useState } from "react";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { useRouter } from "next/router";
 
@@ -23,6 +25,7 @@ export const SearchBar = ({}: SearchBarProps) => {
   const [search, setSearch] = useState("");
   const [options, setOptions] = useState<string[]>();
   const router = useRouter();
+  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const submitData = async (value: string) => {
     setSearch(value);
@@ -37,54 +40,53 @@ export const SearchBar = ({}: SearchBarProps) => {
   };
 
   return (
-    <Stack width={"100%"} direction={"row"} gap={2}>
-      <Autocomplete
-        filterOptions={filterOptions}
-        freeSolo
-        onChange={(
-          event: SyntheticEvent<Element | Event>,
-          value: string | null
-        ) => {
-          submitData(value || "");
-        }}
-        options={options || []}
-        value={search}
-        sx={{ width: "100%", maxWidth: 500 }}
-        renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-          <TextField
-            {...params}
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton
-                    onClick={() => router.push("/sinonimo/" + search)}
-                  >
-                    <SearchRoundedIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              submitData(event.target.value);
-            }}
-            focused
-            placeholder="Palavra a sinonimizar"
-          />
-        )}
-      />
-      <Button
-        type="submit"
-        onClick={() => {
-          console.log(search);
-          router.push("/sinonimo/" + search);
-        }}
-        variant="text"
-        size="large"
-        color="primary"
-      >
-        Procurar
-      </Button>
-    </Stack>
+    <form
+      style={{ width: "100%" }}
+      onSubmit={(event: FormEvent) => {
+        event.preventDefault();
+        router.push("/sinonimo/" + search);
+      }}
+    >
+      <Stack width={"100%"} direction={isSmall ? "column" : "row"} gap={2}>
+        <Autocomplete
+          filterOptions={filterOptions}
+          freeSolo
+          onChange={(
+            event: SyntheticEvent<Element | Event>,
+            value: string | null
+          ) => {
+            submitData(value || "");
+          }}
+          options={options || []}
+          value={search}
+          sx={{ width: "100%", maxWidth: 500 }}
+          renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton
+                      onClick={() => router.push("/sinonimo/" + search)}
+                    >
+                      <SearchRoundedIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                submitData(event.target.value);
+              }}
+              focused
+              placeholder="Palavra a sinonimizar"
+            />
+          )}
+        />
+        <Button type="submit" variant="contained" size="medium" color="primary">
+          Procurar
+        </Button>
+      </Stack>
+    </form>
   );
 };
