@@ -9,6 +9,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import React from "react";
 import { Header } from "../components/Header";
+import { Layout } from "../components/Layout";
 import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
 
@@ -39,7 +40,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {router.pathname === "/" ? <></> : <Header />}
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

@@ -15,16 +15,7 @@ const Home: NextPage = () => {
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   return (
-    <Box
-      display={"flex"}
-      flexDirection="column"
-      justifyContent={"center"}
-      alignItems="center"
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: (theme) => theme.palette.background.default,
-      }}
-    >
+    <Box display={"flex"} justifyContent={"center"} minHeight={"100vh"}>
       <Stack
         mt={-10}
         display={"flex"}

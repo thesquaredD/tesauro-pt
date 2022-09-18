@@ -32,11 +32,8 @@ export const SearchBar = ({}: SearchBarProps) => {
         .then((data) => {
           const sugestoes = data.map((x: any) => x.a_palavra);
           setOptions(sugestoes);
-          console.log(sugestoes);
         });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   return (
