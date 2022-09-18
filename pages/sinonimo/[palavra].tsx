@@ -10,7 +10,7 @@ import {
 import { sinonimos } from "@prisma/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SinonimoPanel } from "../../components/SinonimoPanel";
 import { SinonimoTabs } from "../../components/SinonimoTabs";
 
@@ -48,7 +48,13 @@ function Palavra({
   palavra,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [value, setValue] = useState(0);
+  const [sinonimos, setSinonimos] = useState<Object[]>([]);
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    setValue(0);
+    setSinonimos(sinonimo_list);
+  }, [sinonimo_list]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -68,14 +74,14 @@ function Palavra({
             <Button color={"primary"}>Ver definição</Button>
           </Link>
         </Stack>
-        {sinonimo_list.length !== 0 ? (
+        {sinonimos.length !== 0 ? (
           <>
             <SinonimoTabs value={value} onChange={handleChange}>
-              {sinonimo_list?.map((sinonimo: any, key: number) => {
+              {sinonimos.map((sinonimo: any, key: number) => {
                 return <Tab key={key} label={key} {...a11yProps(key)} />;
               })}
             </SinonimoTabs>
-            {sinonimo_list?.map((sinonimo: any, key: number) => (
+            {sinonimos.map((sinonimo: any, key: number) => (
               <SinonimoPanel
                 key={key}
                 sinonimo={sinonimo}
