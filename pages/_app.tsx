@@ -4,12 +4,14 @@ import {
   PaletteMode,
   responsiveFontSizes,
   ThemeProvider,
+  useMediaQuery,
 } from "@mui/material";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import React from "react";
 import { Header } from "../components/Header";
 import { Layout } from "../components/Layout";
+import { MobileSearch } from "../components/MobileSearch";
 import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
 
@@ -30,10 +32,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     }),
     []
   );
-
   let theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   theme = responsiveFontSizes(theme);
   let router = useRouter();
+  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -43,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        {isSmall && router.pathname !== "/" ? <MobileSearch /> : <></>}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

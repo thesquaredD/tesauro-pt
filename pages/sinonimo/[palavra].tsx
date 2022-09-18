@@ -1,13 +1,18 @@
-import { Box, Button, Chip, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Stack,
+  Tab,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { sinonimos } from "@prisma/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { Header } from "../../components/Header";
 import { SinonimoPanel } from "../../components/SinonimoPanel";
 import { SinonimoTabs } from "../../components/SinonimoTabs";
-import { TabPanel } from "../../components/TabPanel";
 
 import prisma from "../../lib/prisma";
 
@@ -43,14 +48,15 @@ function Palavra({
   palavra,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [value, setValue] = useState(0);
-  const router = useRouter();
+  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   return (
     <>
-      <Box pt={15} width={"95%"} maxWidth={"800px"}>
+      <Box pt={isSmall ? 3 : 20} width={"95%"} maxWidth={"800px"}>
         <Stack mb={2} direction={"row"} gap={2}>
           <Typography variant="h2" color={"textPrimary"}>
             {palavra}
