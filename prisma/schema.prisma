@@ -25,9 +25,24 @@ model sinonimos {
 
 model palavras {
   a_palavra                               String      @id
+  favoritos                               favoritos[]
   sinonimos                               sinonimos[]
   sinonimos_palavrasTosinonimos_sinonimo1 sinonimos[] @relation("palavrasTosinonimos_sinonimo1")
   sinonimos_palavrasTosinonimos_sinonimo2 sinonimos[] @relation("palavrasTosinonimos_sinonimo2")
   sinonimos_palavrasTosinonimos_sinonimo3 sinonimos[] @relation("palavrasTosinonimos_sinonimo3")
   sinonimos_palavrasTosinonimos_sinonimo4 sinonimos[] @relation("palavrasTosinonimos_sinonimo4")
+}
+
+model profiles {
+  id        String      @id @db.Uuid
+  favoritos favoritos[]
+}
+
+model favoritos {
+  userId   String   @db.Uuid
+  palavra  String
+  palavras palavras @relation(fields: [palavra], references: [a_palavra], onDelete: NoAction, onUpdate: NoAction)
+  profiles profiles @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, palavra])
 }
