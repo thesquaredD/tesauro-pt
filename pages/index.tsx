@@ -52,9 +52,9 @@ const Home: NextPage = () => {
         alignItems={"center"}
         gap={2}
       >
-        {session?.user ? (
-          <Typography variant="h4" fontWeight={200}>
-            Welcome back{" "}
+        {session?.user && session.user.user_metadata.name.length < 42 ? (
+          <Typography textAlign={"center"} variant="h4" fontWeight={200}>
+            Boas-vindas{" "}
             <Box
               component={"span"}
               sx={{ color: (theme) => theme.palette.primary.main }}
@@ -63,7 +63,9 @@ const Home: NextPage = () => {
             </Box>
           </Typography>
         ) : (
-          <></>
+          <Typography variant="h4" fontWeight={200}>
+            Boas-vindas ao
+          </Typography>
         )}
         <Stack
           justifyContent={"center"}
