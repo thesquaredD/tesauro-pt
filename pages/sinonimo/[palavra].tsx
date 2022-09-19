@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   Stack,
   Tab,
   Theme,
@@ -13,6 +14,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SinonimoPanel } from "../../components/SinonimoPanel";
 import { SinonimoTabs } from "../../components/SinonimoTabs";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import prisma from "../../lib/prisma";
 
@@ -49,7 +52,7 @@ function Palavra({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [value, setValue] = useState(0);
   const [sinonimos, setSinonimos] = useState<Object[]>([]);
-  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     setValue(0);
@@ -63,10 +66,23 @@ function Palavra({
   return (
     <>
       <Box width={"95%"} maxWidth={"800px"}>
-        <Stack mb={2} direction={"row"} gap={2}>
+        <Stack
+          mb={2}
+          display="flex"
+          alignItems="center"
+          direction={"row"}
+          gap={2}
+        >
           <Typography variant="h2" color={"textPrimary"}>
             {palavra}
           </Typography>
+          <IconButton onClick={() => setSelected(!selected)}>
+            {!selected ? (
+              <BookmarkBorderIcon color="primary" />
+            ) : (
+              <BookmarkIcon color="primary" />
+            )}
+          </IconButton>
           <Link
             href={`https://dicionario.priberam.org/${palavra}`}
             passHref={true}
