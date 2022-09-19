@@ -11,13 +11,14 @@ import {
 import { sinonimos } from "@prisma/client";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SinonimoPanel } from "../../components/SinonimoPanel";
 import { SinonimoTabs } from "../../components/SinonimoTabs";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import prisma from "../../lib/prisma";
+import { AuthContext } from "../_app";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -53,11 +54,53 @@ function Palavra({
   const [value, setValue] = useState(0);
   const [sinonimos, setSinonimos] = useState<Object[]>([]);
   const [selected, setSelected] = useState(false);
+  const session = useContext(AuthContext);
+
+  const handleFavorite = async () => {
+    const userId = session?.user?.id;
+    const body = { userId, palavra };
+    if (!selected) {
+      setSelected(true);
+      await fetch("/api/favourite/", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+    } else {
+      setSelected(false);
+      await fetch("/api/favourite/", {
+        method: "DELETE",
+        body: JSON.stringify(body),
+      });
+    }
+  };
 
   useEffect(() => {
     setValue(0);
     setSinonimos(sinonimo_list);
-  }, [sinonimo_list]);
+    const checkBookmark = async () => {
+      try {
+        if (session) {
+          await fetch(
+            "/api/favourite?" +
+              new URLSearchParams({
+                userId: session.user?.id as string,
+                palavra: palavra,
+              }),
+            {
+              method: "GET",
+            }
+          ).then((res) => {
+            res.json().then((data) => {
+              if (data) setSelected(true);
+            });
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    checkBookmark();
+  }, [palavra, session, sinonimo_list]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -76,7 +119,7 @@ function Palavra({
           <Typography variant="h2" color={"textPrimary"}>
             {palavra}
           </Typography>
-          <IconButton onClick={() => setSelected(!selected)}>
+          <IconButton onClick={() => handleFavorite()}>
             {!selected ? (
               <BookmarkBorderIcon color="primary" />
             ) : (
