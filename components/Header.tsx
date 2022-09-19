@@ -1,3 +1,4 @@
+import { AccountCircle, Google } from "@mui/icons-material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import {
@@ -5,21 +6,58 @@ import {
   Button,
   Grid,
   IconButton,
+  Stack,
   Theme,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { ColorModeContext } from "../pages/_app";
-import { SearchBar } from "./SearchBar";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { AuthContext, ColorModeContext } from "../pages/_app";
+import { supabase } from "../utility/supabaseClient";
+import { SearchBar } from "./SearchBar";
 
 export const Header = () => {
   const colorMode = useContext(ColorModeContext);
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
   const router = useRouter();
+  const session = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      alert(router.pathname);
+
+      const { user, session, error } = await supabase.auth.signIn({
+        provider: "google",
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      alert(error.error_description || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const ColorModeIcon = () => {
+    return (
+      <IconButton
+        sx={{ ml: 1 }}
+        onClick={colorMode.toggleColorMode}
+        color="inherit"
+      >
+        {theme.palette.mode === "dark" ? (
+          <Brightness7Icon color="primary" />
+        ) : (
+          <Brightness4Icon color="primary" />
+        )}
+      </IconButton>
+    );
+  };
 
   return (
     <Box
@@ -33,12 +71,9 @@ export const Header = () => {
       <Grid
         container
         display={"flex"}
-        maxWidth="90%"
+        maxWidth="95%"
         alignItems="center"
         spacing={2}
-        sx={{
-          maxWidth: "800px",
-        }}
         py={2}
       >
         <Grid
@@ -50,7 +85,8 @@ export const Header = () => {
           sm
         >
           <Box
-            pt={1}
+            onClick={() => router.push("/")}
+            p={1}
             sx={{
               borderRadius: "5px",
               transition: "background-color linear 0.15s",
@@ -60,21 +96,30 @@ export const Header = () => {
               },
             }}
           >
-            <Image
-              onClick={() => router.push("/")}
-              width="70%"
-              height="70%"
-              objectFit="contain"
-              src={
-                theme.palette.mode === "dark"
-                  ? "/logoLightDiff.svg"
-                  : "/logoDark.svg"
-              }
-              alt="logo"
-            />
+            <Stack
+              display={"flex"}
+              alignItems="center"
+              direction={"row"}
+              spacing={2}
+            >
+              <Image
+                width="50%"
+                height="50%"
+                objectFit="contain"
+                src={
+                  theme.palette.mode === "dark"
+                    ? "/logoLightDiff.svg"
+                    : "/logoDark.svg"
+                }
+                alt="logo"
+              />
+              <Typography variant="h5" textTransform={"uppercase"}>
+                Tesauro.pt
+              </Typography>
+            </Stack>
           </Box>
         </Grid>
-        <Grid sx={{ display: { xs: "none", sm: "flex" } }} item xs={12} sm={8}>
+        <Grid sx={{ display: { xs: "none", sm: "flex" } }} item xs={12} sm={7}>
           <SearchBar />
         </Grid>
         <Grid
@@ -85,17 +130,19 @@ export const Header = () => {
           item
           sm
         >
-          <IconButton
-            sx={{ ml: 1 }}
-            onClick={colorMode.toggleColorMode}
-            color="inherit"
-          >
-            {theme.palette.mode === "dark" ? (
-              <Brightness7Icon color="primary" />
-            ) : (
-              <Brightness4Icon color="primary" />
-            )}
-          </IconButton>
+          {!session?.user ? (
+            <Button
+              onClick={handleLogin}
+              startIcon={<Google />}
+              variant="outlined"
+            >
+              Log in
+            </Button>
+          ) : (
+            <Button startIcon={<AccountCircle />} variant="outlined">
+              {session.user.user_metadata.name}
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>

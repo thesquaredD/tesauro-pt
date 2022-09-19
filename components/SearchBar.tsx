@@ -51,6 +51,7 @@ export const SearchBar = ({}: SearchBarProps) => {
         <Autocomplete
           filterOptions={filterOptions}
           freeSolo
+          fullWidth
           onChange={(
             event: SyntheticEvent<Element | Event>,
             value: string | null
@@ -59,7 +60,7 @@ export const SearchBar = ({}: SearchBarProps) => {
           }}
           options={options || []}
           value={search}
-          sx={{ width: "100%", maxWidth: 500 }}
+          sx={{ width: "100%" }}
           renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
             <TextField
               {...params}
