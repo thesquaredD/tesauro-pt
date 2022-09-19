@@ -12,6 +12,8 @@ import { Layout } from "../components/Layout";
 import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
 import { supabase } from "../utility/supabaseClient";
+import { UserProvider } from "@supabase/auth-helpers-react";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -20,7 +22,6 @@ export const ColorModeContext = React.createContext({
 export const AuthContext = createContext<Session | null>(null);
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [session, setSession] = useState<Session | null>(null);
   const [mode, setMode] = useState<PaletteMode>("dark");
 
   const colorMode = React.useMemo(
@@ -66,9 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   useEffect(() => {
-    setSession(supabase.auth.session());
-    supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
       if (_event == "SIGNED_IN") {
         if (!(await getUser(session))) {
           addUser(session);
@@ -80,12 +79,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <AuthContext.Provider value={session}>
+        <UserProvider supabaseClient={supabaseClient}>
           <CssBaseline />
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </AuthContext.Provider>
+        </UserProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

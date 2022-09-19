@@ -1,16 +1,39 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { NextPage } from "next";
-import { useContext } from "react";
-import { AuthContext } from "../_app";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { Bookmarks } from "@mui/icons-material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { Box, Chip, Stack, Typography } from "@mui/material";
+import { favoritos } from "@prisma/client";
+import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
+import { InferGetServerSidePropsType, NextPage } from "next";
+import { useRouter } from "next/router";
+import prisma from "../../lib/prisma";
 
-const Profile: NextPage = () => {
-  const session = useContext(AuthContext);
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/",
+  async getServerSideProps(ctx) {
+    const { user } = await getUser(ctx);
+    const favoritos: favoritos[] = await prisma.favoritos.findMany({
+      where: {
+        userId: user?.id as string,
+      },
+    });
+    return { props: { favoritos } };
+  },
+});
+
+const Profile: NextPage = ({
+  favoritos,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
 
   const User = () => {
     return (
-      <Box width={"100%"} display={"flex"} justifyContent="flex-start">
+      <Stack
+        spacing={2}
+        width={"100%"}
+        display={"flex"}
+        justifyContent="flex-start"
+      >
         <Stack
           display={"flex"}
           alignItems="center"
@@ -18,22 +41,23 @@ const Profile: NextPage = () => {
           spacing={1}
         >
           <Bookmarks color="primary" />
-          <Typography fontWeight={"bold"} variant="h5" color="primary">
+          <Typography fontWeight={"bold"} variant="h5">
             Palavras Favoritas
           </Typography>
         </Stack>
-      </Box>
-    );
-  };
-
-  const UserNotFound = () => {
-    return (
-      <>
-        <ErrorOutlineIcon fontSize={"large"} color="primary" />
-        <Typography variant="h5" color="primary" fontWeight={200}>
-          Hmmm... Parece que não tens conta. Faz log in para veres o teu perfil.
-        </Typography>
-      </>
+        <Stack direction={"row"} spacing={2}>
+          {favoritos.map((fav: favoritos, key: number) => {
+            return (
+              <Chip
+                key={key}
+                label={fav.palavra}
+                clickable
+                onClick={() => router.push(`/sinonimo/${fav.palavra}`)}
+              />
+            );
+          })}
+        </Stack>
+      </Stack>
     );
   };
 
@@ -47,7 +71,7 @@ const Profile: NextPage = () => {
         borderRadius={5}
         bgcolor={(theme) => theme.palette.background.paper}
       >
-        {session?.user ? <User /> : <UserNotFound />}
+        <User />
       </Stack>
     </Box>
   );

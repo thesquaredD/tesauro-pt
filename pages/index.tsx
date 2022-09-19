@@ -14,10 +14,12 @@ import { SearchBar } from "../components/SearchBar";
 import { supabase } from "../utility/supabaseClient";
 import { AuthContext } from "./_app";
 import GoogleIcon from "@mui/icons-material/Google";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 
 const Home: NextPage = () => {
   const theme = useTheme();
-  const session = useContext(AuthContext);
+  const { user, error } = useUser();
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +27,7 @@ const Home: NextPage = () => {
     try {
       setLoading(true);
 
-      const { user, session, error } = await supabase.auth.signIn({
+      const { user, session, error } = await supabaseClient.auth.signIn({
         provider: "google",
       });
       if (error) throw error;
@@ -52,14 +54,14 @@ const Home: NextPage = () => {
         alignItems={"center"}
         gap={2}
       >
-        {session?.user && session.user.user_metadata.name.length < 42 ? (
+        {user && user.user_metadata.name.length < 42 ? (
           <Typography textAlign={"center"} variant="h4" fontWeight={200}>
             Boas-vindas{" "}
             <Box
               component={"span"}
               sx={{ color: (theme) => theme.palette.primary.main }}
             >
-              {session.user.user_metadata.name}
+              {user.user_metadata.name}
             </Box>
           </Typography>
         ) : (
@@ -100,7 +102,7 @@ const Home: NextPage = () => {
           {/* {!session?.user ? <></> : <Button onClick={signout}>Logout</Button>} */}
         </Stack>
         <SearchBar />
-        {!session?.user ? (
+        {!user ? (
           <Box mt={4}>
             <Button
               startIcon={<GoogleIcon />}

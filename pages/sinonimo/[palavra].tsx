@@ -19,6 +19,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import prisma from "../../lib/prisma";
 import { AuthContext } from "../_app";
+import { useUser } from "@supabase/auth-helpers-react";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -54,10 +55,10 @@ function Palavra({
   const [value, setValue] = useState(0);
   const [sinonimos, setSinonimos] = useState<Object[]>([]);
   const [selected, setSelected] = useState(false);
-  const session = useContext(AuthContext);
+  const { user, error } = useUser();
 
   const handleFavorite = async () => {
-    const userId = session?.user?.id;
+    const userId = user?.id;
     const body = { userId, palavra };
     if (!selected) {
       setSelected(true);
@@ -79,11 +80,11 @@ function Palavra({
     setSinonimos(sinonimo_list);
     const checkBookmark = async () => {
       try {
-        if (session) {
+        if (user) {
           await fetch(
             "/api/favourite?" +
               new URLSearchParams({
-                userId: session.user?.id as string,
+                userId: user.id as string,
                 palavra: palavra,
               }),
             {
@@ -100,7 +101,7 @@ function Palavra({
       }
     };
     checkBookmark();
-  }, [palavra, session, sinonimo_list]);
+  }, [palavra, user, sinonimo_list]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
@@ -24,7 +25,7 @@ export const Header = () => {
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
   const router = useRouter();
-  const session = useContext(AuthContext);
+  const { user, error } = useUser();
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -130,7 +131,7 @@ export const Header = () => {
           item
           sm
         >
-          {!session?.user ? (
+          {!user ? (
             <Button
               onClick={handleLogin}
               startIcon={<Google />}
@@ -144,7 +145,7 @@ export const Header = () => {
               startIcon={<AccountCircle />}
               variant="outlined"
             >
-              {session.user.user_metadata.name}
+              {user.user_metadata.name}
             </Button>
           )}
         </Grid>
