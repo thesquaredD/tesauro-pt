@@ -12,6 +12,7 @@ export const Layout = ({ children }: { children: any }) => {
       {router.pathname === "/" ? <></> : <Header />}
       <Box
         display={"flex"}
+        pt={router.pathname === "/" ? 0 : isSmall ? 3 : 20}
         flexDirection="column"
         justifyContent={"flex-start"}
         alignItems="center"

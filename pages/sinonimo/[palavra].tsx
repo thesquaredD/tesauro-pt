@@ -62,7 +62,7 @@ function Palavra({
 
   return (
     <>
-      <Box pt={isSmall ? 3 : 20} width={"95%"} maxWidth={"800px"}>
+      <Box width={"95%"} maxWidth={"800px"}>
         <Stack mb={2} direction={"row"} gap={2}>
           <Typography variant="h2" color={"textPrimary"}>
             {palavra}
