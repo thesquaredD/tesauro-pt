@@ -5,7 +5,7 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material";
-import { Session } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 import type { AppProps } from "next/app";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Layout } from "../components/Layout";
@@ -37,10 +37,43 @@ function MyApp({ Component, pageProps }: AppProps) {
   let theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   theme = responsiveFontSizes(theme);
 
+  const getUser = async (session: Session | null) => {
+    let userExists = false;
+    try {
+      await fetch(`/api/user/${session?.user?.id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.id === session?.user?.id) {
+            userExists = true;
+          }
+        });
+    } catch (e) {
+      console.log(e);
+    }
+    return userExists;
+  };
+
+  const addUser = async (session: Session | null) => {
+    try {
+      await fetch(`/api/user/${session?.user?.id}`, {
+        method: "POST",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     setSession(supabase.auth.session());
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+      if (_event == "SIGNED_IN") {
+        if (!(await getUser(session))) {
+          addUser(session);
+        }
+      }
     });
   }, []);
 
