@@ -17,7 +17,7 @@ import Image from "next/image";
 
 export const Header = () => {
   const colorMode = useContext(ColorModeContext);
-  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+  const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
   const router = useRouter();
 

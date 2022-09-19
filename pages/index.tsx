@@ -33,6 +33,7 @@ const Home: NextPage = () => {
             width="100%"
             height="100%"
             objectFit="contain"
+            priority
             src={
               theme.palette.mode === "dark"
                 ? "/logoLightDiff.svg"
