@@ -139,7 +139,11 @@ export const Header = () => {
               Log in
             </Button>
           ) : (
-            <Button startIcon={<AccountCircle />} variant="outlined">
+            <Button
+              onClick={() => router.push("/profile")}
+              startIcon={<AccountCircle />}
+              variant="outlined"
+            >
               {session.user.user_metadata.name}
             </Button>
           )}
