@@ -1,8 +1,9 @@
 # Tesauro.pt
-![alt text](https://github.com/squaredD/tesauro-pt/tree/main/public/logo.jpg?raw=true)
+![alt text](https://github.com/thesquaredD/tesauro-pt/blob/main/public/logoSmall.png)
+
 Dicionário de sinónimos da língua portuguesa.
 
-Constrúido utilizando [Next.js](https://nextjs.org/), [PostgreSQL](https://www.postgresql.org/), [Supabase](https://supabase.com/) e [Prisma](https://www.prisma.io/).
+Construído utilizando [Next.js](https://nextjs.org/), [PostgreSQL](https://www.postgresql.org/), [Supabase](https://supabase.com/) e [Prisma](https://www.prisma.io/).
 
 *Leia isto em [Inglês](README.md)
 <!-- ## Running on your machine
