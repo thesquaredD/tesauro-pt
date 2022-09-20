@@ -20,6 +20,8 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import prisma from "../../lib/prisma";
 import { AuthContext } from "../_app";
 import { useUser } from "@supabase/auth-helpers-react";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -56,6 +58,7 @@ function Palavra({
   const [sinonimos, setSinonimos] = useState<Object[]>([]);
   const [selected, setSelected] = useState(false);
   const { user, error } = useUser();
+  const router = useRouter();
 
   const handleFavorite = async () => {
     const userId = user?.id;
@@ -109,6 +112,13 @@ function Palavra({
 
   return (
     <>
+      <Head>
+        <title>
+          {router.asPath.substring(router.asPath.lastIndexOf("/") + 1) +
+            " - " +
+            "Tesauro.pt"}
+        </title>
+      </Head>
       <Box width={"95%"} maxWidth={"800px"}>
         <Stack
           mb={2}

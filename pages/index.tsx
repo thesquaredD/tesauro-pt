@@ -16,6 +16,7 @@ import { AuthContext } from "./_app";
 import GoogleIcon from "@mui/icons-material/Google";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
+import Head from "next/head";
 
 const Home: NextPage = () => {
   const theme = useTheme();
@@ -46,77 +47,82 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Box display={"flex"} justifyContent={"center"} minHeight={"100vh"}>
-      <Stack
-        mt={-10}
-        display={"flex"}
-        justifyContent="center"
-        alignItems={"center"}
-        gap={2}
-      >
-        {user && user.user_metadata.name.length < 42 ? (
-          <Typography textAlign={"center"} variant="h4" fontWeight={200}>
-            Boas-vindas{" "}
-            <Box
-              component={"span"}
-              sx={{ color: (theme) => theme.palette.primary.main }}
-            >
-              {user.user_metadata.name}
-            </Box>
-          </Typography>
-        ) : (
-          <Typography variant="h4" fontWeight={200}>
-            Boas-vindas ao
-          </Typography>
-        )}
+    <>
+      <Head>
+        <title>Tesauro.pt</title>
+      </Head>
+      <Box display={"flex"} justifyContent={"center"} minHeight={"100vh"}>
         <Stack
-          justifyContent={"center"}
-          alignItems="center"
-          direction={isSmall ? "column" : "row"}
+          mt={-10}
+          display={"flex"}
+          justifyContent="center"
+          alignItems={"center"}
           gap={2}
         >
-          <Image
-            width="100%"
-            unselectable="on"
-            height="100%"
-            objectFit="contain"
-            priority
-            style={{
-              userSelect: "none",
-            }}
-            src={
-              theme.palette.mode === "dark"
-                ? "/logoLightDiff.svg"
-                : "/logoDark.svg"
-            }
-            alt="logo"
-          />
-          <Typography
-            textTransform={"uppercase"}
-            variant="h1"
-            color="textPrimary"
+          {user && user.user_metadata.name.length < 42 ? (
+            <Typography textAlign={"center"} variant="h4" fontWeight={200}>
+              Boas-vindas{" "}
+              <Box
+                component={"span"}
+                sx={{ color: (theme) => theme.palette.primary.main }}
+              >
+                {user.user_metadata.name}
+              </Box>
+            </Typography>
+          ) : (
+            <Typography variant="h4" fontWeight={200}>
+              Boas-vindas ao
+            </Typography>
+          )}
+          <Stack
+            justifyContent={"center"}
+            alignItems="center"
+            direction={isSmall ? "column" : "row"}
+            gap={2}
           >
-            Tesauro.pt
-          </Typography>
-          <Typography></Typography>
-          {/* {!session?.user ? <></> : <Button onClick={signout}>Logout</Button>} */}
-        </Stack>
-        <SearchBar />
-        {!user ? (
-          <Box mt={4}>
-            <Button
-              startIcon={<GoogleIcon />}
-              variant="outlined"
-              onClick={handleLogin}
+            <Image
+              width="100%"
+              unselectable="on"
+              height="100%"
+              objectFit="contain"
+              priority
+              style={{
+                userSelect: "none",
+              }}
+              src={
+                theme.palette.mode === "dark"
+                  ? "/logoLightDiff.svg"
+                  : "/logoDark.svg"
+              }
+              alt="logo"
+            />
+            <Typography
+              textTransform={"uppercase"}
+              variant="h1"
+              color="textPrimary"
             >
-              entra com o google
-            </Button>
-          </Box>
-        ) : (
-          <></>
-        )}
-      </Stack>
-    </Box>
+              Tesauro.pt
+            </Typography>
+            <Typography></Typography>
+            {/* {!session?.user ? <></> : <Button onClick={signout}>Logout</Button>} */}
+          </Stack>
+          <SearchBar />
+          {!user ? (
+            <Box mt={4}>
+              <Button
+                startIcon={<GoogleIcon />}
+                variant="outlined"
+                onClick={handleLogin}
+              >
+                entra com o google
+              </Button>
+            </Box>
+          ) : (
+            <></>
+          )}
+        </Stack>
+      </Box>
+    </>
   );
 };
 

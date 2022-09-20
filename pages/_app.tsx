@@ -5,15 +5,15 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material";
-import { Session, User } from "@supabase/supabase-js";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { UserProvider } from "@supabase/auth-helpers-react";
+import { Session } from "@supabase/supabase-js";
 import type { AppProps } from "next/app";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { createContext, useEffect, useState } from "react";
 import { Layout } from "../components/Layout";
 import "../styles/globals.css";
 import { getDesignTokens } from "../styles/theme";
-import { supabase } from "../utility/supabaseClient";
-import { UserProvider } from "@supabase/auth-helpers-react";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -23,6 +23,7 @@ export const AuthContext = createContext<Session | null>(null);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [mode, setMode] = useState<PaletteMode>("dark");
+  const router = useRouter();
 
   const colorMode = React.useMemo(
     () => ({

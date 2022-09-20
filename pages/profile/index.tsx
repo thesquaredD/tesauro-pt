@@ -5,6 +5,7 @@ import { favoritos } from "@prisma/client";
 import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
 import { InferGetServerSidePropsType, NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import prisma from "../../lib/prisma";
 
@@ -25,6 +26,7 @@ const Profile: NextPage = ({
   favoritos,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
+  const { user } = useUser();
 
   const User = () => {
     return (
@@ -62,18 +64,23 @@ const Profile: NextPage = ({
   };
 
   return (
-    <Box width={"95%"} maxWidth={"800px"}>
-      <Stack
-        spacing={4}
-        display={"flex"}
-        alignItems="center"
-        p={5}
-        borderRadius={5}
-        bgcolor={(theme) => theme.palette.background.paper}
-      >
-        <User />
-      </Stack>
-    </Box>
+    <>
+      <Head>
+        <title>{user?.user_metadata.name + " - Tesauro.pt"}</title>
+      </Head>
+      <Box width={"95%"} maxWidth={"800px"}>
+        <Stack
+          spacing={4}
+          display={"flex"}
+          alignItems="center"
+          p={5}
+          borderRadius={5}
+          bgcolor={(theme) => theme.palette.background.paper}
+        >
+          <User />
+        </Stack>
+      </Box>
+    </>
   );
 };
 
