@@ -1,5 +1,6 @@
 # Tesauro.pt
-![alt text](https://github.com/squaredD/tesauro-pt/tree/main/public/logo.jpg?raw=true)
+![alt text](https://github.com/thesquaredD/tesauro-pt/blob/main/public/logoSmall.png)
+
 Portuguese Online Thesaurus platform.
 
 Built using [Next.js](https://nextjs.org/), [PostgreSQL](https://www.postgresql.org/), [Supabase](https://supabase.com/) and [Prisma](https://www.prisma.io/).
